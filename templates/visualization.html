@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FarmWise Dashboard</title>
+
+    <!-- Vendor CSS ================================================== -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/vendor.css') }}" />
+
+    <!-- Bootstrap ================================================== -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
+
+    <!-- Style Sheet ================================================== -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" />
+
+    <!-- Google Fonts ================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        .dashboard-body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .dashboard-title {
+            text-align: center;
+            font-size: 35px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .summary {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            flex: 1 1 30%;
+            margin: 10px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .visualization {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .visualization-card {
+            flex: 1 1 45%;
+            margin: 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .visualization-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .visualization-card:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .visualization-card img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .summary-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .visualization-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#header-nav" tabindex="0">
+    <nav class="navbar navbar-expand-lg navbar-light container-fluid py-3 position-fixed">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><img src="{{ url_for('static', filename='images/Mainlogo.svg') }}"
+                    alt="logo" /></a>
+            <button class="navbar-toggler me-3" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
+                aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                        aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav align-items-center justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link active px-3" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#rental">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#pricing">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#services">Contact Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#blog">FAQ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="#action">LOGIN/SIGNUP</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav> <br><br><br><br><br>
+
+    <div class="container">
+        <h1 class="dashboard-title">Data Visualization Dashboard for {{ data_type }}</h1>
+        <hr>
+
+        <h2 class="summary-title">Summary Statistics</h2>
+        <div class="summary">
+            {% for key, value in summary_stats.items() %}
+            <div class="summary-card">
+                <h3>{{ key }}</h3>
+                <p>{{ value }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+
+        <h2 class="visualization-title">Visualizations</h2>
+        <div class="visualization">
+            {% if data_type == '1' %}
+            <div class="visualization-card">
+                <h4>Average Soil Moisture Over Time</h4>
+                <img src="data:image/png;base64,{{ images['line_plot'] }}" alt="Average Soil Moisture Over Time" />
+            </div>
+            <div class="visualization-card">
+                <h4>Soil Moisture Scatter Plot</h4>
+                <img src="data:image/png;base64,{{ images['scatter_plot'] }}" alt="Soil Moisture Scatter Plot" />
+            </div>
+            <div class="visualization-card">
+                <h4>Distribution of Soil Moisture Values</h4>
+                <img src="data:image/png;base64,{{ images['histogram'] }}" alt="Distribution of Soil Moisture Values" />
+            </div>
+            <div class="visualization-card">
+                <h4>Soil Moisture Value Distribution</h4>
+                <img src="data:image/png;base64,{{ images['box_plot'] }}" alt="Soil Moisture Value Distribution" />
+            </div>
+            {% elif data_type == '2' %}
+            <div class="visualization-card">
+                <h4>Average Rainfall Over Time</h4>
+                <img src="data:image/png;base64,{{ images['line_plot'] }}" alt="Average Rainfall Over Time" />
+            </div>
+            <div class="visualization-card">
+                <h4>Rainfall Scatter Plot</h4>
+                <img src="data:image/png;base64,{{ images['scatter_plot'] }}" alt="Rainfall Scatter Plot" />
+            </div>
+            <div class="visualization-card">
+                <h4>Distribution of Rainfall Values</h4>
+                <img src="data:image/png;base64,{{ images['histogram'] }}" alt="Distribution of Rainfall Values" />
+            </div>
+            <div class="visualization-card">
+                <h4>Rainfall Value Distribution</h4>
+                <img src="data:image/png;base64,{{ images['box_plot'] }}" alt="Rainfall Value Distribution" />
+            </div>
+            {% elif data_type == '3' %}
+            <div class="visualization-card">
+                <h4>Average Temperature Over Time</h4>
+                <img src="data:image/png;base64,{{ images['temperature_plot'] }}" alt="Average Temperature Over Time" />
+            </div>
+            <div class="visualization-card">
+                <h4>Precipitation Over Time</h4>
+                <img src="data:image/png;base64,{{ images['precipitation_plot'] }}" alt="Precipitation Over Time" />
+            </div>
+            <div class="visualization-card">
+                <h4>Wind Speed Over Time</h4>
+                <img src="data:image/png;base64,{{ images['wind_speed_plot'] }}" alt="Wind Speed Over Time" />
+            </div>
+            {% endif %}
+        </div>
+
+        <a href="{{ url_for('home') }}" class="btn btn-primary back-button">Go Back</a>
+    </div>
+
+
+    <section class="faqs-wrap no-padding-bottom">
+        <div class="container mt-5">
+            <div class="row g-5 my-4">
+                <main class="col-md-8">
+                    <h3 class="section-title text-uppercase">Frequently asked questions</h3>
+                    <div class="page-content my-5">
+
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+
+                            <div class="accordion-item mt-3">
+                                <h5 class="accordion-header" id="panelsStayOpen-headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                        aria-controls="panelsStayOpen-collapseOne">
+                                        1. How can real-time data help my farming decisions?
+                                    </button>
+                                </h5>
+                                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                    <div class="accordion-body">
+                                        <p>Real-time data offers critical insights into weather patterns, soil moisture,
+                                            and crop conditions. This helps farmers make timely decisions, optimizing
+                                            water use, improving yields, and reducing risks.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseTwo">
+                                        2. What types of data do you provide?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingTwo">
+                                    <div class="accordion-body">
+                                        <p>We offer data on soil moisture, rainfall (past and predicted), flood risk,
+                                            vegetation health, extreme temperatures, water availability, drought
+                                            monitoring, and more to support smart farming.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseThree">
+                                        3. How do I use the dashboard?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingThree">
+                                    <div class="accordion-body">
+                                        <p>Our dashboard is designed for simplicity. Just log in, select your location,
+                                            and view the data you need. You can choose specific data points like soil
+                                            moisture or rainfall predictions.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseFour">
+                                        4. Can I access past data for my farm?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFour">
+                                    <div class="accordion-body">
+                                        <p>Yes, historical data is available. You can track past weather and soil trends
+                                            to better prepare for future planting seasons.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseFive">
+                                        5. What do I need to get started?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingFive">
+                                    <div class="accordion-body">
+                                        <p>You just need to provide your location (city and state) and the type of data
+                                            you’re interested in, such as soil moisture or rainfall predictions.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseSix">
+                                        6. Is the data free?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingSix">
+                                    <div class="accordion-body">
+                                        <p>Yes, all the data we provide is free to access. Our goal is to make this
+                                            information easily available to all farmers.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingSeven">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseSeven" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseSeven">
+                                        7. How often is the data updated?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseSeven" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingSeven">
+                                    <div class="accordion-body">
+                                        <p>Our data is updated frequently, often daily or even hourly, depending on the
+                                            data source, to give you the most current information.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="accordion-item mt-3">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingEight">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseEight" aria-expanded="false"
+                                        aria-controls="panelsStayOpen-collapseEight">
+                                        8. How can I contact support if I need help?
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse"
+                                    aria-labelledby="panelsStayOpen-headingEight">
+                                    <div class="accordion-body">
+                                        <p>For any help or questions, visit our 'Contact Us' page, and our support team
+                                            will be happy to assist you.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                    </div>
+                </main>
+                <div class="inquiry-item col-md-4">
+                    <h3 class="section-title mb-3">Ask us anything</h3>
+                    <p>Call Us +91 7057616140 or just drop us your message at <a
+                            href="mailto:contact@hackhustler.com">contact@hackhustler.com</a>. You can directly message
+                        us. </p>
+                    <form id="form" class="form-group flex-wrap">
+                        <div class="form-input col-lg-12 d-flex mb-3">
+                            <input type="text" name="email" placeholder="Write Your Name Here"
+                                class="form-control ps-3 me-3">
+                            <input type="text" name="email" placeholder="Write Your Email Here"
+                                class="form-control ps-3">
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <input type="text" name="email" placeholder="Phone Number" class="form-control ps-3">
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <input type="text" name="email" placeholder="Write Your Subject Here"
+                                class="form-control ps-3">
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <textarea placeholder="Write Your Message Here" class="form-control ps-3"
+                                rows="8"></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary btn-lg text-uppercase btn-rounded-none">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="position-relative jarallax" style="background: url('{{ url_for('static', filename='images/CONTACT.jpg') }}');
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+          height: 70vh;">
+            <div class="container">
+                <div class="hero-content text-center position-absolute start-50 top-50 translate-middle">
+                    <h6 class="display-5 fw-bold text-uppercase text-white mb-2">contact info</h6>
+                    <p class="text-white">Have questions or need assistance? We're here to help! Reach out to us for
+                        support, feedback, or inquiries about our services.</p>
+                    <h4 class="fw-medium"><a href="#" class="text-white text-decoration-underline">Call us +91
+                            7057616140</a></h4>
+                    <div><button class="btn btn-primary rounded-0 mt-5" type="button">Contact us</button></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section Starts -->
+    <section id="footer" class="bg-dark text-white">
+        <div class="container footer-container">
+            <footer class="row g-5 py-5 ">
+                <div class="col-md-4">
+                    <img src="{{ url_for('static', filename='images/White Logo.png') }}" alt="image" />
+                    <p class="py-3">Empowering farmers with real-time data insights for smarter, sustainable
+                        agriculture.</p>
+                    <div class="d-flex align-items-center">
+                        <a href="#" target="_blank"><iconify-icon class="social-link-icon pe-4 text-white"
+                                icon="mdi:facebook"></iconify-icon></a>
+                        <a href="#" target="_blank"><iconify-icon class="social-link-icon pe-4 text-white"
+                                icon="mdi:twitter"></iconify-icon></a>
+                        <a href="#" target="_blank"><iconify-icon class="social-link-icon pe-4 text-white"
+                                icon="mdi:instagram"></iconify-icon></a>
+                        <a href="#" target="_blank"><iconify-icon class="social-link-icon pe-4 text-white"
+                                icon="mdi:linkedin"></iconify-icon></a>
+                        <a href="#" target="_blank"><iconify-icon class="social-link-icon pe-4 text-white"
+                                icon="mdi:youtube"></iconify-icon></a>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h4 class="text-uppercase">CONTACT INFO</h4>
+                    <ul class="footer-nav list-unstyled d-block pt-3 ">
+                        <li class="pb-3"><a href="#" class="text-white"><svg class="contact me-1" width="16"
+                                    height="16">
+                                    <use xlink:href="#location"></use>
+                                </svg> Nashik Maharastra, India</a></li>
+                        <li class="pb-3"><a href="#" class="text-white"><svg class="contact me-1" width="16"
+                                    height="16">
+                                    <use xlink:href="#call"></use>
+                                </svg>Call: +91 7057616140</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <h4 class="text-uppercase">Subscribe our Newsletter</h4>
+                    <p class="py-3">Stay updated with the latest farming insights—Subscribe to our Newsletter!</p>
+                    <div class="d-flex align-items-center">
+                        <form class="w-100">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="input-group border-bottom">
+                                        <input type="email" class="form-control fst-italic bg-dark text-white border-0"
+                                            placeholder="Enter your email">
+                                        <span class="input-group-btn">
+                                            <button class="btn text-white" type="submit">Subscribe</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <footer class="d-flex flex-wrap justify-content-between align-items-center border-top"></footer>
+
+        <div class="container">
+            <footer class="d-flex flex-wrap justify-content-between align-items-center py-2 pt-4">
+                <div class="col-md-6 d-flex align-items-center"></div>
+                <div class="col-md-6 d-flex align-items-center justify-content-end">
+                    <ul class="footer-nav list-unstyled">
+                        <li class="nav-item me-2">
+                            <a class="nav-link pe-3 text-white " href="#">Home</a>
+                        </li>
+                        <li class="nav-item me-2 mb-3">
+                            <a class="nav-link pe-3 text-white " href="#">Dashboard</a>
+                        </li>
+                        <li class="nav-item me-2 mb-3">
+                            <a class="nav-link pe-3 text-white " href="#">About</a>
+                        </li>
+                        <li class="nav-item me-2 mb-3">
+                            <a class="nav-link pe-3 text-white " href="#">Contacts</a>
+                        </li>
+                        <li class="nav-item me-2 mb-3">
+                            <a class="nav-link pe-3 text-white " href="#">FAQ</a>
+                        </li>
+                        <li class="nav-item me-2 mb-3">
+                            <a class="nav-link pe-3 text-white " href="#">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </section>
+
+    <!-- Script ================================================== -->
+    <script src="{{ url_for('static', filename='js/jquery-1.11.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.7/dist/iconify-icon.min.js"></script>
+
+</body>
+
+</html>

@@ -9,7 +9,7 @@ import io
 import base64
 
 app = Flask(__name__)
-app.secret_key = 'nasa061024'  # Required for flash messages
+app.secret_key = 'YOUR_SECRET_KEY'  # Required for flash messages
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

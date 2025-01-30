@@ -8,12 +8,12 @@ from datetime import datetime, timedelta
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # API configuration for Meteomatics
-API_USERNAME = 'sandipuniversity_gadekar_prasad'  # Replace with your Meteomatics API username
-API_PASSWORD = 'VvKEhd60F7'  # Replace with your Meteomatics API password
+API_USERNAME = 'YOUR_USERNAME_BY_METOMATICS'  # Replace with your Meteomatics API username
+API_PASSWORD = 'YOUR+PASSWORD_BY_METOMATICS'  # Replace with your Meteomatics API password
 BASE_URL = 'https://api.meteomatics.com'
 
 # API configuration for OpenCage Geocoding
-OPENCAGE_API_KEY = "dbf974fa35244195bb01be7bb3f1b1bd"  # Replace with your OpenCage API key
+OPENCAGE_API_KEY = "YOUR_API_KEY"  # Replace with your OpenCage API key
 
 def get_geometry(location):
     """Get geometry for a given location using OpenCage Geocoding API."""

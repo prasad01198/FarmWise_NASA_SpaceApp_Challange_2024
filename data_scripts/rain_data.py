@@ -5,7 +5,7 @@ import pandas as pd
 import sys
 import time
 
-API_KEY = "dbf974fa35244195bb01be7bb3f1b1bd"  # Use the same API key as in soil_data.py
+API_KEY = "YOUR_API_KEY"  # Use the same API key as in soil_data.py
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

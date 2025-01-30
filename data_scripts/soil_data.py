@@ -8,7 +8,7 @@ import sys
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-API_KEY = "dbf974fa35244195bb01be7bb3f1b1bd"  # Your actual API key
+API_KEY = "YOUR_API_KEY"  # Your actual API key
 
 def get_geometry(location):
     """Get geometry for a given location using a geocoding API."""
